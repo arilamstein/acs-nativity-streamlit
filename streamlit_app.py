@@ -1,27 +1,18 @@
 import streamlit as st
-import pandas as pd
 import acs_nativity
-
-# Load all data
-df_us = pd.read_csv("us.csv")
-df_state = pd.read_csv("state.csv")
-df_county = pd.read_csv("county.csv")
+import data
 
 # Let use choose what to see
 geography = st.selectbox(label="Geography:", options=["Nation", "State", "County"])
 if geography == "Nation":
-    df = df_us
+    df = data.get_nation_data()
 elif geography == "State":
-    df = df_state.copy()
-    state = st.selectbox(label="State:", options=df["Name"].unique())
-    df = df[df["Name"] == state]
-
+    state = st.selectbox(label="State:", options=data.get_state_names())
+    df = data.get_state_data(state)
 elif geography == "County":
-    df = df_county.copy()
-    state = st.selectbox(label="State:", options=df["State"].unique())
-    counties = df[df["State"] == state]["County"]
-    county = st.selectbox(label="County:", options=counties.unique())
-    df = df[(df["State"] == state) & (df["County"] == county)]
+    state = st.selectbox(label="State:", options=data.get_state_names())
+    county = st.selectbox(label="County:", options=data.get_county_names(state))
+    df = data.get_county_data(state, county)
 else:
     raise ValueError("Unknown geography")
 
