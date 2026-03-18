@@ -4,16 +4,16 @@ requires-python = ">=3.13"
 
 [[package]]
 name = "acs-nativity"
-version = "0.1.1"
+version = "0.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "censusdis" },
     { name = "pandas" },
     { name = "plotly" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/15/5d/6e7b23151544d92ec76dbde20268f2f30be4c68aab5441cbbfd55966e947/acs_nativity-0.1.1.tar.gz", hash = "sha256:a776b430b8e12ba4351794e4f788f077415c36126e8a23a74fe9b55f2361ad64", size = 7733, upload-time = "2026-03-11T17:42:11.958Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8d/5c/4a29bc057d48e5d4869a94c3cf5b894ddb3b8ee459c4ed02728d7d1d5827/acs_nativity-0.1.2.tar.gz", hash = "sha256:39cf5afeeb52cf3ea0fa048bea673d8f38b3946756bc328d736b2d00b28192e3", size = 7780, upload-time = "2026-03-18T22:44:42.635Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/79/c1/db48a6b0c6ee726828ac7d47ebad0583aac3f6c8d8e6d34cb3c37ad70e72/acs_nativity-0.1.1-py3-none-any.whl", hash = "sha256:02f06df1eb51a15c196a7399dd06fbedc2d629ff1dce188fbf6d93009d832550", size = 8691, upload-time = "2026-03-11T17:42:11.145Z" },
+    { url = "https://files.pythonhosted.org/packages/00/32/ffe5537c2f8998aa85dd5039c93f923342a648615df4d4a0a9ca9f85b99c/acs_nativity-0.1.2-py3-none-any.whl", hash = "sha256:5407ed3c91cb6426aa1d86ba436f71e62503a89d67214726e352a08ae67494ea", size = 8834, upload-time = "2026-03-18T22:44:41.503Z" },
 ]
 
 [[package]]
@@ -35,7 +35,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "acs-nativity", specifier = ">=0.1.1" },
+    { name = "acs-nativity", specifier = ">=0.1.2" },
     { name = "streamlit", specifier = ">=1.55.0" },
 ]
 
