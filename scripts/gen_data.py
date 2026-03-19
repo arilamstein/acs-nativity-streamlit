@@ -2,6 +2,7 @@
 Generate US, state, county, and place nativity data and write them to CSV files.
 """
 
+from pathlib import Path
 from gen_data_helpers import (
     get_us_data,
     get_state_data,
@@ -14,10 +15,17 @@ import time
 start = time.time()
 
 END_YEAR = 2024
-get_us_data(end_year=END_YEAR, verbose=True).to_csv("us.csv", index=False)
-get_state_data(end_year=END_YEAR, verbose=True).to_csv("state.csv", index=False)
-get_county_data(end_year=END_YEAR, verbose=True).to_csv("county.csv", index=False)
-get_place_data(end_year=END_YEAR, verbose=True).to_csv("place.csv", index=False)
+DATA_DIR = Path("data")
+get_us_data(end_year=END_YEAR, verbose=True).to_csv(DATA_DIR / "us.csv", index=False)
+get_state_data(end_year=END_YEAR, verbose=True).to_csv(
+    DATA_DIR / "state.csv", index=False
+)
+get_county_data(end_year=END_YEAR, verbose=True).to_csv(
+    DATA_DIR / "county.csv", index=False
+)
+get_place_data(end_year=END_YEAR, verbose=True).to_csv(
+    DATA_DIR / "place.csv", index=False
+)
 
 end = time.time()
 duration = end - start
