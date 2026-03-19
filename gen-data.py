@@ -13,6 +13,7 @@ us_filename = "us.csv"
 
 df_us = get_nativity_timeseries(end_year=END_YEAR, us="*")
 
+df_us = df_us.sort_values("Year")
 df_us.to_csv(us_filename, index=False)
 print(f"US data written to {us_filename}!")
 
@@ -23,6 +24,7 @@ state_filename = "state.csv"
 df_state = get_nativity_timeseries(end_year=END_YEAR, state="*")
 df_state = df_state[df_state["Name"] != "Puerto Rico"]
 
+df_state = df_state.sort_values(["Year", "Name"])
 df_state.to_csv(state_filename, index=False)
 print(f"State data generated to {state_filename}!")
 
@@ -58,6 +60,7 @@ df_county = df_county[
     ]
 ]
 
+df_county = df_county.sort_values(["Year", "State", "County"])
 df_county.to_csv(county_filename, index=False)
 print(f"County data generated to {county_filename}!")
 
@@ -101,6 +104,8 @@ df_place = df_place[
         "Percent Foreign-born",
     ]
 ]
+
+df_place = df_place.sort_values(["Year", "State", "Place"])
 df_place.to_csv(place_filename, index=False)
 print(f"Place data generated to {place_filename}!")
 
