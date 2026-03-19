@@ -1,6 +1,6 @@
 import streamlit as st
 import acs_nativity
-import data
+import data_access as data
 
 # Let use choose what to see
 geography = st.selectbox(

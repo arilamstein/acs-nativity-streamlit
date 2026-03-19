@@ -1,9 +1,12 @@
+from pathlib import Path
 import pandas as pd
 
-df_nation = pd.read_csv("us.csv")
-df_state = pd.read_csv("state.csv")
-df_county = pd.read_csv("county.csv")
-df_place = pd.read_csv("place.csv")
+DATA_DIR = Path("data")
+
+df_nation = pd.read_csv(DATA_DIR / "us.csv")
+df_state = pd.read_csv(DATA_DIR / "state.csv")
+df_county = pd.read_csv(DATA_DIR / "county.csv")
+df_place = pd.read_csv(DATA_DIR / "place.csv")
 
 
 def get_nation_data() -> pd.DataFrame:
