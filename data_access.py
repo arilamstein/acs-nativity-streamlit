@@ -25,15 +25,45 @@ def get_county_names(state: str) -> list[str]:
     return df_county[df_county["State"] == state]["County"].unique().tolist()
 
 
-def get_county_data(state: str, county: str) -> pd.DataFrame:
-    return df_county[
-        (df_county["State"] == state) & (df_county["County"] == county)
-    ].copy()
+def get_county_data(state: str, county: str | None) -> pd.DataFrame:
+    if county is None:  # Return all counties in the state
+        return df_county[df_county["State"] == state].copy()
+    else:
+        return df_county[
+            (df_county["State"] == state) & (df_county["County"] == county)
+        ].copy()
 
 
 def get_place_names(state: str) -> list[str]:
     return df_place[df_place["State"] == state]["Place"].unique().tolist()
 
 
-def get_place_data(state: str, place: str) -> pd.DataFrame:
-    return df_place[(df_place["State"] == state) & (df_place["Place"] == place)].copy()
+def get_place_data(state: str, place: str | None) -> pd.DataFrame:
+    if place is None:  # Return all places in the state
+        return df_place[df_place["State"] == state].copy()
+    else:
+        return df_place[
+            (df_place["State"] == state) & (df_place["Place"] == place)
+        ].copy()
+
+
+def get_all_data(state: str) -> pd.DataFrame:
+    # For "Nation" view, just return all data
+    if state == "Nation":
+        df = pd.concat([df_nation, df_state, df_county, df_place], ignore_index=True)
+    # Otherwise just show data for a particular state.
+    # That means: all state data, all county data, all place data
+    else:
+        df = pd.concat(
+            [
+                get_state_data(state),
+                get_county_data(state, county=None),
+                get_place_data(state, place=None),
+            ],
+            ignore_index=True,
+        )
+
+    # Drop columns I added to support zoom
+    df = df.drop(columns=["State", "County", "Place"], errors="ignore")
+    df = df.sort_values("Percent Foreign-born", ascending=False)
+    return df

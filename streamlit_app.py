@@ -46,14 +46,17 @@ elif location in data.get_state_names():
     elif zoom_to in data.get_place_names(location):  # data for a place in a state
         df = data.get_place_data(location, zoom_to)
     else:
-        raise ValueError("Unknown sub-region {zoom_to} for state {location}")
+        raise ValueError(f"Unknown sub-region {zoom_to} for state {location}")
 else:
     raise ValueError(f"Unknown State {location}")
 
 # Make charts
-tab1, tab2 = st.tabs(["📈 Trend", "📊 Year‑to‑Year Change"])
+tab1, tab2, tab3 = st.tabs(["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table"])
 with tab1:
     st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
 
 with tab2:
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
+
+with tab3:
+    st.dataframe(data.get_all_data(location), hide_index=True)
