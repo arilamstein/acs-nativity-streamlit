@@ -2,6 +2,15 @@ import streamlit as st
 import acs_nativity
 import data_access as data
 
+st.title("U.S. Foreign‑Born Population Trends")
+st.markdown(
+    """
+    Explore how the foreign‑born and native‑born populations have changed 
+    across the United States since 2005.  
+    Choose a location to view its trends, and use **Zoom to** for county‑ or city‑level detail.
+    """
+)
+
 # Let user select what data they want to see.
 col1, col2, col3 = st.columns(3)
 with col1:
