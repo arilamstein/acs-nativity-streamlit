@@ -51,5 +51,9 @@ else:
     raise ValueError(f"Unknown State {location}")
 
 # Make charts
-st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
-st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
+tab1, tab2 = st.tabs(["📈 Trend", "📊 Year‑to‑Year Change"])
+with tab1:
+    st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
+
+with tab2:
+    st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
