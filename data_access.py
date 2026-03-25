@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+from pandas.io.formats.style import Styler
 
 DATA_DIR = Path("data")
 
@@ -47,7 +48,17 @@ def get_place_data(state: str, place: str | None) -> pd.DataFrame:
         ].copy()
 
 
-def get_all_data(state: str, latest_only: bool) -> pd.DataFrame:
+def style_nativity_table(df: pd.DataFrame) -> Styler:
+    fmt = {
+        "Total": lambda x: f"{x:,.0f}",
+        "Native": lambda x: f"{x:,.0f}",
+        "Foreign-born": lambda x: f"{x:,.0f}",
+        "Percent Foreign-born": lambda x: f"{x:.1f}%",
+    }
+    return df.style.format(fmt)  # type: ignore[arg-type]
+
+
+def get_all_data(state: str, latest_only: bool, style: bool) -> pd.DataFrame | Styler:
     # For "Nation" view, just return all data
     if state == "Nation":
         df = pd.concat([df_nation, df_state, df_county, df_place], ignore_index=True)
@@ -72,4 +83,8 @@ def get_all_data(state: str, latest_only: bool) -> pd.DataFrame:
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
     df = df.sort_values("Percent Foreign-born", ascending=False)
-    return df
+
+    if style:
+        return style_nativity_table(df)
+    else:
+        return df

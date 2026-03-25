@@ -60,4 +60,4 @@ with tab2:
 
 with tab3:
     latest_only = st.checkbox("Show only latest year", True)
-    st.dataframe(data.get_all_data(location, latest_only), hide_index=True)
+    st.dataframe(data.get_all_data(location, latest_only, True), hide_index=True)
