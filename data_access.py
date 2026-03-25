@@ -4,14 +4,14 @@ from pandas.io.formats.style import Styler
 
 DATA_DIR = Path("data")
 
-df_nation = pd.read_csv(DATA_DIR / "us.csv")
+df_us = pd.read_csv(DATA_DIR / "us.csv")
 df_state = pd.read_csv(DATA_DIR / "state.csv")
 df_county = pd.read_csv(DATA_DIR / "county.csv")
 df_place = pd.read_csv(DATA_DIR / "place.csv")
 
 
-def get_nation_data() -> pd.DataFrame:
-    return df_nation.copy()
+def get_us_data() -> pd.DataFrame:
+    return df_us.copy()
 
 
 def get_state_names() -> list[str]:
@@ -58,19 +58,21 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_all_data(state: str, latest_only: bool, style: bool) -> pd.DataFrame | Styler:
-    # For "Nation" view, just return all data
-    if state == "Nation":
-        df = pd.concat([df_nation, df_state, df_county, df_place], ignore_index=True)
+def get_all_data(
+    location: str, latest_only: bool, style: bool
+) -> pd.DataFrame | Styler:
+    # For "United States" view, just return all data
+    if location == "United States":
+        df = pd.concat([df_us, df_state, df_county, df_place], ignore_index=True)
     # Otherwise just show data for a particular state.
     # That means: all state data, all county data, all place data - but only
     # for the selected state.
     else:
         df = pd.concat(
             [
-                get_state_data(state),
-                get_county_data(state, county=None),
-                get_place_data(state, place=None),
+                get_state_data(location),
+                get_county_data(location, county=None),
+                get_place_data(location, place=None),
             ],
             ignore_index=True,
         )

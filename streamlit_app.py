@@ -15,15 +15,15 @@ st.markdown(
 col1, col2, col3 = st.columns(3)
 with col1:
     # View data for either the entire country or a state
-    location_options = ["Nation"] + data.get_state_names()
+    location_options = ["United States"] + data.get_state_names()
     location = st.selectbox(label="Location:", options=location_options)
 with col2:
     # When looking at a state, let user choose either the entire state or
     # a county or place within the state.
-    # Disable when user is looking at entire nation
-    disabled = location == "Nation"
+    # Disable when user is looking at entire United States
+    disabled = location == "United States"
     zoom_options = ["-"]
-    if location != "Nation":
+    if location != "United States":
         zoom_options += sorted(
             data.get_county_names(location) + data.get_place_names(location)
         )
@@ -35,8 +35,8 @@ with col3:
     )
 
 # Now get data
-if location == "Nation":
-    df = data.get_nation_data()
+if location == "United States":
+    df = data.get_us_data()
 # Data for a state or sub-region of a state
 elif location in data.get_state_names():
     if zoom_to == "-":  # data for an entire state
@@ -59,5 +59,13 @@ with tab2:
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
 with tab3:
-    latest_only = st.checkbox("Show only latest year", True)
+    latest_only = st.checkbox("Latest year only", True)
+    year_text = "the **latest year**" if latest_only else "**all years**"
+    if location == "United States":
+        st.markdown(
+            f"Showing all geographies in the **United States** for {year_text}."
+        )
+    else:
+        st.markdown(f"Showing all geographies in **{location}** for {year_text}.")
+
     st.dataframe(data.get_all_data(location, latest_only, True), hide_index=True)
