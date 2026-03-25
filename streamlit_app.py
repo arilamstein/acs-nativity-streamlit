@@ -59,4 +59,5 @@ with tab2:
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
 with tab3:
-    st.dataframe(data.get_all_data(location), hide_index=True)
+    latest_only = st.checkbox("Show only latest year", True)
+    st.dataframe(data.get_all_data(location, latest_only), hide_index=True)

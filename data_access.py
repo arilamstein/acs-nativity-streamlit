@@ -47,12 +47,13 @@ def get_place_data(state: str, place: str | None) -> pd.DataFrame:
         ].copy()
 
 
-def get_all_data(state: str) -> pd.DataFrame:
+def get_all_data(state: str, latest_only: bool) -> pd.DataFrame:
     # For "Nation" view, just return all data
     if state == "Nation":
         df = pd.concat([df_nation, df_state, df_county, df_place], ignore_index=True)
     # Otherwise just show data for a particular state.
-    # That means: all state data, all county data, all place data
+    # That means: all state data, all county data, all place data - but only
+    # for the selected state.
     else:
         df = pd.concat(
             [
@@ -62,6 +63,11 @@ def get_all_data(state: str) -> pd.DataFrame:
             ],
             ignore_index=True,
         )
+
+    # Optionally subset to the latest year
+    if latest_only:
+        max_year = df["Year"].max()
+        df = df[df["Year"] == max_year]
 
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
