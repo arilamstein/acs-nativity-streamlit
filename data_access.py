@@ -48,6 +48,16 @@ def get_place_data(state: str, place: str | None) -> pd.DataFrame:
         ].copy()
 
 
+def get_zoom_options(location: str) -> list[str]:
+    zoom_options = ["-"]
+    if location != "United States":
+        names = get_county_names(location) + get_place_names(location)
+        # In some states (like VA), cities are "independent cities" and
+        # appear in both the county and place datasets. Dedupe the list.
+        zoom_options += sorted(set(names))
+    return zoom_options
+
+
 def style_nativity_table(df: pd.DataFrame) -> Styler:
     fmt = {
         "Total": lambda x: f"{x:,.0f}",
@@ -59,7 +69,7 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
 
 
 def get_all_data(
-    location: str, latest_only: bool, style: bool
+    location: str, latest_only: bool, style: bool, verbose: bool = False
 ) -> pd.DataFrame | Styler:
     # For "United States" view, just return all data
     if location == "United States":
@@ -85,6 +95,15 @@ def get_all_data(
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
     df = df.sort_values("Percent Foreign-born", ascending=False)
+
+    # Virginia has a lot of "Independent Cities" (like "Suffolk city")
+    # that appear in both the counties and places files. This leads to duplicates
+    # when concatenating the datasets
+    if verbose:
+        dupes = df[df.duplicated(subset=["Name", "Year"], keep=False)]
+        print(f"{len(dupes)} duplicate rows detected")
+        print(dupes[["Name", "Year"]].drop_duplicates().sort_values(["Name", "Year"]))
+    df = df.drop_duplicates(subset=["Name", "Year"])
 
     if style:
         return style_nativity_table(df)

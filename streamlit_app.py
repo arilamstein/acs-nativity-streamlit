@@ -22,11 +22,7 @@ with col2:
     # a county or place within the state.
     # Disable when user is looking at entire United States
     disabled = location == "United States"
-    zoom_options = ["-"]
-    if location != "United States":
-        zoom_options += sorted(
-            data.get_county_names(location) + data.get_place_names(location)
-        )
+    zoom_options = data.get_zoom_options(location)
     zoom_to = st.selectbox(label="Zoom to:", options=zoom_options, disabled=disabled)
 with col3:
     column = st.selectbox(
