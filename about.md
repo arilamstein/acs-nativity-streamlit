@@ -1,6 +1,4 @@
-## About this app
-
-This tool lets you explore changes in the U.S. native‑born and foreign‑born populations using the American Community Survey (ACS) 1‑year estimates from 2005–2024. You can view trends for the nation, states, counties, and places, and compare any two years side‑by‑side.
+This tool lets you explore changes in the U.S. native‑born and foreign‑born populations using the American Community Survey (ACS) 1‑year estimates from 2005–2024. You can view trends for the nation, states, counties, and places, and compare any two years side‑by‑side. Going forward, this tool can help people track how the foreign‑born population shifts as the Trump administration’s immigration enforcement efforts unfold.
 
 The app is built with Streamlit and powered by the `acs‑nativity` Python package.
 
