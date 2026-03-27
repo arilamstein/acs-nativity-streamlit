@@ -47,16 +47,16 @@ else:
     raise ValueError(f"Unknown State {location}")
 
 # Make charts
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years"]
+line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
+    ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years", "ℹ️ About"]
 )
-with tab1:
+with line_tab:
     st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
 
-with tab2:
+with bar_tab:
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
-with tab3:
+with table_tab:
     latest_only = st.checkbox("Latest year only", True)
     year_text = "the **latest year**" if latest_only else "**all years**"
     if location == "United States":
@@ -68,7 +68,7 @@ with tab3:
 
     st.dataframe(data.get_all_data_styled(location, latest_only), hide_index=True)
 
-with tab4:
+with compare_tab:
     years = data.get_years()
     col1, col2 = st.columns(2)
     with col1:
@@ -88,3 +88,6 @@ with tab4:
     st.dataframe(
         data.get_compare_df_styled(location, year1, year2, column), hide_index=True
     )
+
+with about_tab:
+    st.write(open("about.md").read())
