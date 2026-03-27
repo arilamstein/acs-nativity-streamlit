@@ -68,9 +68,9 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_all_data(
-    location: str, latest_only: bool, style: bool, verbose: bool = False
-) -> pd.DataFrame | Styler:
+def get_all_data_df(
+    location: str, latest_only: bool, verbose: bool = False
+) -> pd.DataFrame:
     # For "United States" view, just return all data
     if location == "United States":
         df = pd.concat([df_us, df_state, df_county, df_place], ignore_index=True)
@@ -105,7 +105,13 @@ def get_all_data(
         print(dupes[["Name", "Year"]].drop_duplicates().sort_values(["Name", "Year"]))
     df = df.drop_duplicates(subset=["Name", "Year"])
 
-    if style:
-        return style_nativity_table(df)
-    else:
-        return df
+    return df
+
+
+def get_all_data_styled(
+    location: str,
+    latest_only: bool,
+    verbose: bool = False,
+) -> Styler:
+    df = get_all_data_df(location, latest_only, verbose)
+    return style_nativity_table(df)

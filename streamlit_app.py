@@ -64,4 +64,4 @@ with tab3:
     else:
         st.markdown(f"Showing all geographies in **{location}** for {year_text}.")
 
-    st.dataframe(data.get_all_data(location, latest_only, True), hide_index=True)
+    st.dataframe(data.get_all_data_styled(location, latest_only), hide_index=True)
