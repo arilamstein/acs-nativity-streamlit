@@ -47,7 +47,9 @@ else:
     raise ValueError(f"Unknown State {location}")
 
 # Make charts
-tab1, tab2, tab3 = st.tabs(["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table"])
+tab1, tab2, tab3, tab4 = st.tabs(
+    ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years"]
+)
 with tab1:
     st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
 
@@ -65,3 +67,24 @@ with tab3:
         st.markdown(f"Showing all geographies in **{location}** for {year_text}.")
 
     st.dataframe(data.get_all_data_styled(location, latest_only), hide_index=True)
+
+with tab4:
+    years = data.get_years()
+    col1, col2 = st.columns(2)
+    with col1:
+        year1 = st.selectbox("First Year:", years, 0)
+    with col2:
+        year2 = st.selectbox("Second Year:", years, len(years) - 1)
+
+    year_text = f"**{year1}** and **{year2}**"
+    if location == "United States":
+        st.markdown(
+            f"Showing the change in **{column}** in the **United States** between {year_text}."
+        )
+    else:
+        st.markdown(
+            f"Showing the change in **{column}** in **{location}** between {year_text}."
+        )
+    st.dataframe(
+        data.get_compare_df_styled(location, year1, year2, column), hide_index=True
+    )
