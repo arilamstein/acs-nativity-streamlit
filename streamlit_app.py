@@ -7,44 +7,30 @@ st.markdown(
     """
     Explore how the foreign‑born and native‑born populations have changed 
     across the United States since 2005.  
-    Choose a location to view its trends, and use **Zoom to** for county‑ or city‑level detail.
+    **Start typing** the name of a State, County, or City to search for it.
     """
 )
 
 # Let user select what data they want to see.
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 with col1:
-    # View data for either the entire country or a state
-    location_options = ["United States"] + data.get_state_names()
-    location = st.selectbox(label="Location:", options=location_options)
+    location_options = data.get_all_names()
+    location = st.selectbox(
+        label="Location:",
+        options=location_options,
+        index=None,
+        placeholder="Search for a place...",
+    )
+    st.markdown("_(Tip: start typing to filter the list)_")
 with col2:
-    # When looking at a state, let user choose either the entire state or
-    # a county or place within the state.
-    # Disable when user is looking at entire United States
-    disabled = location == "United States"
-    zoom_options = data.get_zoom_options(location)
-    zoom_to = st.selectbox(label="Zoom to:", options=zoom_options, disabled=disabled)
-with col3:
     column = st.selectbox(
         "Demographic:",
         options=["Foreign-born", "Percent Foreign-born", "Native", "Total"],
     )
 
-# Now get data
-if location == "United States":
-    df = data.get_us_data()
-# Data for a state or sub-region of a state
-elif location in data.get_state_names():
-    if zoom_to == "-":  # data for an entire state
-        df = data.get_state_data(location)
-    elif zoom_to in data.get_county_names(location):  # data for a county in a state
-        df = data.get_county_data(location, zoom_to)
-    elif zoom_to in data.get_place_names(location):  # data for a place in a state
-        df = data.get_place_data(location, zoom_to)
-    else:
-        raise ValueError(f"Unknown sub-region {zoom_to} for state {location}")
-else:
-    raise ValueError(f"Unknown State {location}")
+if location is None:
+    location = "United States"
+df = data.get_data_for_name(location)
 
 # Make charts
 line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
@@ -59,14 +45,9 @@ with bar_tab:
 with table_tab:
     latest_only = st.checkbox("Latest year only", True)
     year_text = "the **latest year**" if latest_only else "**all years**"
-    if location == "United States":
-        st.markdown(
-            f"Showing all geographies in the **United States** for {year_text}."
-        )
-    else:
-        st.markdown(f"Showing all geographies in **{location}** for {year_text}.")
+    st.markdown(f"Showing all geographies for {year_text}.")
 
-    st.dataframe(data.get_all_data_styled(location, latest_only), hide_index=True)
+    st.dataframe(data.get_table_df_styled(latest_only), hide_index=True)
 
 with compare_tab:
     years = data.get_years()
@@ -85,9 +66,7 @@ with compare_tab:
         st.markdown(
             f"Showing the change in **{column}** in **{location}** between {year_text}."
         )
-    st.dataframe(
-        data.get_compare_df_styled(location, year1, year2, column), hide_index=True
-    )
+    st.dataframe(data.get_compare_df_styled(year1, year2, column), hide_index=True)
 
 with about_tab:
     st.write(open("about.md").read())
