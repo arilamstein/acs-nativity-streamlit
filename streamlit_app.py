@@ -16,11 +16,11 @@ line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
     ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years", "ℹ️ About"]
 )
 with line_tab:
-    location, column, df = ui.location_and_demographic_selector("line")
+    location, column, df = ui.location_and_demographic_block("line")
     st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
 
 with bar_tab:
-    location, column, df = ui.location_and_demographic_selector("bar")
+    location, column, df = ui.location_and_demographic_block("bar")
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
 with table_tab:

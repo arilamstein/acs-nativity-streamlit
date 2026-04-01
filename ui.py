@@ -34,11 +34,29 @@ def demographic_selector(tab: str) -> str:
     return column
 
 
-def location_and_demographic_selector(tab: str) -> tuple[str, str, pd.DataFrame]:
+def location_selector(tab: str) -> str:
     valid_tabs = ["bar", "line"]
     if tab not in valid_tabs:
         raise ValueError(f"tab must be one of {valid_tabs}. {tab} given.")
 
+    loc_key = f"{tab}_loc_value"
+    all_loc_keys = [f"{one_tab}_loc_value" for one_tab in valid_tabs]
+
+    location_options = data.get_all_names()
+    location = st.selectbox(
+        "Location:",
+        options=location_options,
+        placeholder="Search for a place...",
+        index=None,
+        key=loc_key,
+        on_change=lambda: sync_values(loc_key, all_loc_keys),
+    )
+    if location is None:
+        location = "United States"
+    return location
+
+
+def location_and_demographic_block(tab: str) -> tuple[str, str, pd.DataFrame]:
     st.markdown(
         "**Start typing** the name of a State, County, or City to search for it. "
         "Or leave blank to view totals for the entire United States."
@@ -46,26 +64,12 @@ def location_and_demographic_selector(tab: str) -> tuple[str, str, pd.DataFrame]
     col1, col2 = st.columns(2)
 
     with col1:
-        loc_key = f"{tab}_loc_value"
-        all_loc_keys = [f"{one_tab}_loc_value" for one_tab in valid_tabs]
-
-        location_options = data.get_all_names()
-        location = st.selectbox(
-            "Location:",
-            options=location_options,
-            placeholder="Search for a place...",
-            index=None,
-            key=loc_key,
-            on_change=lambda: sync_values(loc_key, all_loc_keys),
-        )
-
+        location = location_selector(tab)
         st.markdown("_(Tip: start typing to filter the list)_")
 
     with col2:
         column = demographic_selector(tab)
 
-    if location is None:
-        location = "United States"
     df = data.get_data_for_name(location)
     return location, column, df
 
