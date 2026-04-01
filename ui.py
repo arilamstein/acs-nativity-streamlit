@@ -1,3 +1,16 @@
+"""
+Helpers for building Streamlit UI elements that appear across multiple tabs.
+
+Streamlit does not natively support using the same widget instance in more than
+one tab. This module works around that by creating duplicate widgets—one per tab—
+and keeping them synchronized via `st.session_state`.
+
+Each widget is given a unique key of the form `<tab>_<element>`. When a widget
+changes, `update_keys()` propagates the new value to the corresponding widgets
+in all other tabs. UI functions only need to declare which tab they belong to;
+the synchronization logic is handled centrally.
+"""
+
 import streamlit as st
 import data_access as data
 
@@ -14,6 +27,11 @@ def gen_key(tab: str, ui_element: str) -> str:
 
 
 def update_keys(updated_key: str) -> None:
+    """
+    Propagate the updated value of a UI element to the same element
+    across all tabs. Ensures synchronized state for shared selectors.
+    """
+
     new_value = st.session_state[updated_key]
 
     ui_element = updated_key.partition("_")[2]
