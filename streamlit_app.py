@@ -16,11 +16,13 @@ line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
     ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years", "ℹ️ About"]
 )
 with line_tab:
-    location, column, df = ui.location_and_demographic_block("line")
+    location, column = ui.location_and_demographic_block("line")
+    df = data.get_data_for_name(location)
     st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
 
 with bar_tab:
-    location, column, df = ui.location_and_demographic_block("bar")
+    location, column = ui.location_and_demographic_block("bar")
+    df = data.get_data_for_name(location)
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
 with table_tab:
@@ -45,15 +47,9 @@ with compare_tab:
     with col4:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
-    year_text = f"**{year1}** and **{year2}**"
-    if location == "United States":
-        st.markdown(
-            f"Showing the change in **{column}** in the **United States** between {year_text}."
-        )
-    else:
-        st.markdown(
-            f"Showing the change in **{column}** in **{location}** between {year_text}."
-        )
+    st.markdown(
+        f"Showing the change in **{column}** in **{state}** between **{year1}** and **{year2}**."
+    )
     st.dataframe(
         data.get_compare_df_styled(state, year1, year2, column), hide_index=True
     )

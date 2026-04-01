@@ -1,6 +1,5 @@
 import streamlit as st
 import data_access as data
-import pandas as pd
 
 VALID_TABS = ["bar", "line", "table", "compare"]
 
@@ -62,7 +61,7 @@ def location_selector(tab: str) -> str:
     return location
 
 
-def location_and_demographic_block(tab: str) -> tuple[str, str, pd.DataFrame]:
+def location_and_demographic_block(tab: str) -> tuple[str, str]:
     st.markdown(
         "**Start typing** the name of a State, County, or City to search for it. "
         "Or leave blank to view totals for the entire United States."
@@ -76,8 +75,7 @@ def location_and_demographic_block(tab: str) -> tuple[str, str, pd.DataFrame]:
     with col2:
         column = demographic_selector(tab)
 
-    df = data.get_data_for_name(location)
-    return location, column, df
+    return location, column
 
 
 def state_selector(tab: str) -> str:
