@@ -10,17 +10,23 @@ def validate_tab(tab: str) -> None:
         raise ValueError(f"tab must one of {VALID_TABS}. {tab} given")
 
 
-def sync_values(source_key: str, all_keys: list[str]) -> None:
-    value = st.session_state[source_key]
-    for key in all_keys:
-        if key != source_key:
-            st.session_state[key] = value
+def gen_key(tab: str, ui_element: str) -> str:
+    return f"{tab}_{ui_element}"
+
+
+def update_keys(updated_key: str) -> None:
+    new_value = st.session_state[updated_key]
+
+    ui_element = updated_key.partition("_")[2]
+    for one_tab in VALID_TABS:
+        key_to_update = gen_key(one_tab, ui_element)
+        if key_to_update != updated_key:
+            st.session_state[key_to_update] = new_value
 
 
 def demographic_selector(tab: str) -> str:
     validate_tab(tab)
 
-    key = f"{tab}_demo_value"
     options = [
         "Foreign-born",
         "Percent Foreign-born",
@@ -28,13 +34,12 @@ def demographic_selector(tab: str) -> str:
         "Total",
     ]
 
-    # When user updates any of these select boxes, update all other ones with the same value
-    all_keys = [f"{one_tab}_demo_value" for one_tab in VALID_TABS]
+    key = gen_key(tab, "demographic_selector")
     column = st.selectbox(
         "Demographic:",
         options=options,
         key=key,
-        on_change=lambda: sync_values(key, all_keys),
+        on_change=lambda: update_keys(key),
     )
     return column
 
@@ -42,17 +47,15 @@ def demographic_selector(tab: str) -> str:
 def location_selector(tab: str) -> str:
     validate_tab(tab)
 
-    loc_key = f"{tab}_loc_value"
-    all_loc_keys = [f"{one_tab}_loc_value" for one_tab in VALID_TABS]
-
     location_options = data.get_all_names()
+    key = gen_key(tab, "location_selector")
     location = st.selectbox(
         "Location:",
         options=location_options,
         placeholder="Search for a place...",
         index=None,
-        key=loc_key,
-        on_change=lambda: sync_values(loc_key, all_loc_keys),
+        key=key,
+        on_change=lambda: update_keys(key),
     )
     if location is None:
         location = "United States"
@@ -80,15 +83,13 @@ def location_and_demographic_block(tab: str) -> tuple[str, str, pd.DataFrame]:
 def state_selector(tab: str) -> str:
     validate_tab(tab)
 
-    state_key = f"{tab}_state_value"
-    all_keys = [f"{one_tab}_state_value" for one_tab in VALID_TABS]
-
     state_options = ["All States"] + data.get_all_states()
+    key = gen_key(tab, "state_selector")
     state = st.selectbox(
         "State:",
         options=state_options,
-        key=state_key,
-        on_change=lambda: sync_values(state_key, all_keys),
+        key=key,
+        on_change=lambda: update_keys(key),
     )
 
     return state
