@@ -16,6 +16,10 @@ df_all = pd.concat(
 df_all = df_all.drop_duplicates(subset=["Name", "Year"]).reset_index(drop=True)
 
 
+def get_all_states() -> list[str]:
+    return sorted(df_all["State"].dropna().unique().tolist())
+
+
 def get_all_names() -> list[str]:
     return sorted(df_all["Name"].unique().tolist())
 
@@ -34,13 +38,16 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_table_df(latest_only: bool) -> pd.DataFrame:
+def get_table_df(state: str, latest_only: bool) -> pd.DataFrame:
     df = df_all.copy()
 
     # Optionally subset to the latest year
     if latest_only:
         max_year = df["Year"].max()
         df = df[df["Year"] == max_year]
+
+    if state != "All States":
+        df = df[df["State"] == state]
 
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
@@ -49,8 +56,8 @@ def get_table_df(latest_only: bool) -> pd.DataFrame:
     return df
 
 
-def get_table_df_styled(latest_only: bool) -> Styler:
-    df = get_table_df(latest_only)
+def get_table_df_styled(state: str, latest_only: bool) -> Styler:
+    df = get_table_df(state, latest_only)
     return style_nativity_table(df)
 
 
@@ -58,13 +65,13 @@ def get_years() -> list[int]:
     return sorted(df_all["Year"].unique().tolist())
 
 
-def get_compare_df(year1: int, year2: int, column: str) -> pd.DataFrame:
+def get_compare_df(state: str, year1: int, year2: int, column: str) -> pd.DataFrame:
     """
     Return a wide DataFrame with Name, year1, year2, and change columns
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(False)
+    df = get_table_df(state, False)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 
@@ -114,6 +121,6 @@ def style_compare_table(
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_compare_df_styled(year1: int, year2: int, column: str) -> Styler:
-    df = get_compare_df(year1, year2, column)
+def get_compare_df_styled(state: str, year1: int, year2: int, column: str) -> Styler:
+    df = get_compare_df(state, year1, year2, column)
     return style_compare_table(df, year1, year2, column)

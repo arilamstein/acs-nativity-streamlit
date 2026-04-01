@@ -24,18 +24,23 @@ with bar_tab:
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
 with table_tab:
+    col1, _ = st.columns([1, 2])
+    with col1:
+        state = ui.state_selector("table")
     latest_only = st.checkbox("Latest year only", True)
     year_text = "the **latest year**" if latest_only else "**all years**"
-    st.markdown(f"Showing all geographies for {year_text}.")
+    st.markdown(f"Showing all geographies for **{state}** for {year_text}.")
 
-    st.dataframe(data.get_table_df_styled(latest_only), hide_index=True)
+    st.dataframe(data.get_table_df_styled(state, latest_only), hide_index=True)
 
 with compare_tab:
     years = data.get_years()
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
-        year1 = st.selectbox("First Year:", years, 0)
+        state = ui.state_selector("compare")
     with col2:
+        year1 = st.selectbox("First Year:", years, 0)
+    with col3:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
     year_text = f"**{year1}** and **{year2}**"
@@ -47,7 +52,9 @@ with compare_tab:
         st.markdown(
             f"Showing the change in **{column}** in **{location}** between {year_text}."
         )
-    st.dataframe(data.get_compare_df_styled(year1, year2, column), hide_index=True)
+    st.dataframe(
+        data.get_compare_df_styled(state, year1, year2, column), hide_index=True
+    )
 
 with about_tab:
     st.write(open("about.md").read())

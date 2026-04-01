@@ -51,3 +51,18 @@ def location_and_demographic_selector(tab: str) -> tuple[str, str, pd.DataFrame]
         location = "United States"
     df = data.get_data_for_name(location)
     return location, column, df
+
+
+def state_selector(tab: str) -> str:
+    state_key = f"{tab}_state_value"
+    other_state_key = "compare_state_value" if tab == "table" else "table_state_value"
+
+    state_options = ["All States"] + data.get_all_states()
+    state = st.selectbox(
+        "State:",
+        options=state_options,
+        key=state_key,
+        on_change=lambda: sync_value(state_key, other_state_key),
+    )
+
+    return state
