@@ -1,45 +1,26 @@
 import streamlit as st
 import acs_nativity
 import data_access as data
+import ui as ui
 
+st.set_page_config(layout="wide")
 st.title("U.S. Foreign‑Born Population Trends")
 st.markdown(
     """
     Explore how the foreign‑born and native‑born populations have changed 
     across the United States since 2005.  
-    **Start typing** the name of a State, County, or City to search for it.
     """
 )
 
-# Let user select what data they want to see.
-col1, col2 = st.columns(2)
-with col1:
-    location_options = data.get_all_names()
-    location = st.selectbox(
-        label="Location:",
-        options=location_options,
-        index=None,
-        placeholder="Search for a place...",
-    )
-    st.markdown("_(Tip: start typing to filter the list)_")
-with col2:
-    column = st.selectbox(
-        "Demographic:",
-        options=["Foreign-born", "Percent Foreign-born", "Native", "Total"],
-    )
-
-if location is None:
-    location = "United States"
-df = data.get_data_for_name(location)
-
-# Make charts
 line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
     ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years", "ℹ️ About"]
 )
 with line_tab:
+    location, column, df = ui.location_and_demographic_selector("line")
     st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
 
 with bar_tab:
+    location, column, df = ui.location_and_demographic_selector("bar")
     st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
 
 with table_tab:
