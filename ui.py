@@ -2,6 +2,13 @@ import streamlit as st
 import data_access as data
 import pandas as pd
 
+VALID_TABS = ["bar", "line", "table", "compare"]
+
+
+def validate_tab(tab: str) -> None:
+    if tab not in VALID_TABS:
+        raise ValueError(f"tab must one of {VALID_TABS}. {tab} given")
+
 
 def sync_values(source_key: str, all_keys: list[str]) -> None:
     value = st.session_state[source_key]
@@ -11,9 +18,7 @@ def sync_values(source_key: str, all_keys: list[str]) -> None:
 
 
 def demographic_selector(tab: str) -> str:
-    valid_tabs = ["bar", "line", "compare"]
-    if tab not in valid_tabs:
-        raise ValueError(f"tab must be one of {valid_tabs}. {tab} given.")
+    validate_tab(tab)
 
     key = f"{tab}_demo_value"
     options = [
@@ -24,7 +29,7 @@ def demographic_selector(tab: str) -> str:
     ]
 
     # When user updates any of these select boxes, update all other ones with the same value
-    all_keys = [f"{one_tab}_demo_value" for one_tab in valid_tabs]
+    all_keys = [f"{one_tab}_demo_value" for one_tab in VALID_TABS]
     column = st.selectbox(
         "Demographic:",
         options=options,
@@ -35,12 +40,10 @@ def demographic_selector(tab: str) -> str:
 
 
 def location_selector(tab: str) -> str:
-    valid_tabs = ["bar", "line"]
-    if tab not in valid_tabs:
-        raise ValueError(f"tab must be one of {valid_tabs}. {tab} given.")
+    validate_tab(tab)
 
     loc_key = f"{tab}_loc_value"
-    all_loc_keys = [f"{one_tab}_loc_value" for one_tab in valid_tabs]
+    all_loc_keys = [f"{one_tab}_loc_value" for one_tab in VALID_TABS]
 
     location_options = data.get_all_names()
     location = st.selectbox(
@@ -75,12 +78,10 @@ def location_and_demographic_block(tab: str) -> tuple[str, str, pd.DataFrame]:
 
 
 def state_selector(tab: str) -> str:
-    valid_tabs = ["table", "compare"]
-    if tab not in valid_tabs:
-        raise ValueError(f"tab must be one of {valid_tabs}. {tab} given.")
+    validate_tab(tab)
 
     state_key = f"{tab}_state_value"
-    all_keys = [f"{one_tab}_state_value" for one_tab in valid_tabs]
+    all_keys = [f"{one_tab}_state_value" for one_tab in VALID_TABS]
 
     state_options = ["All States"] + data.get_all_states()
     state = st.selectbox(
