@@ -35,12 +35,14 @@ with table_tab:
 
 with compare_tab:
     years = data.get_years()
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         state = ui.state_selector("compare")
     with col2:
-        year1 = st.selectbox("First Year:", years, 0)
+        column = ui.demographic_selector("compare")
     with col3:
+        year1 = st.selectbox("First Year:", years, 0)
+    with col4:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
     year_text = f"**{year1}** and **{year2}**"
