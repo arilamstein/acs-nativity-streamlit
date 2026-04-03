@@ -4,16 +4,16 @@ requires-python = ">=3.13"
 
 [[package]]
 name = "acs-nativity"
-version = "0.1.3"
+version = "0.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "censusdis" },
     { name = "pandas" },
     { name = "plotly" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e9/13/a7b85b696cf0ad3948caee1d3960abf19de1e7cfc988331dad38850fc62d/acs_nativity-0.1.3.tar.gz", hash = "sha256:c6781db6acbb9355f13b70e726bf49ebc3d04d2f9fa91e0f9eb70847e81b61e0", size = 7863, upload-time = "2026-03-24T00:35:34.48Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4f/88/25d6ccbe9e715ac7df3a2c0b3339aa269b4fe704bf134eb48a48e3c24957/acs_nativity-0.1.4.tar.gz", hash = "sha256:25b46fa7d84d7d4fb380a1e45f325318d0f804308a6d2b44bda7d4786ba7452e", size = 8137, upload-time = "2026-04-02T23:44:02.363Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5a/c7/3cc42f83dd8416f8b7feef70812dd43428adff86255edc9513069e9de32b/acs_nativity-0.1.3-py3-none-any.whl", hash = "sha256:4cdd1f205b12471ca201968cc5040322cecbe6027e23eb481d00065dba07a34a", size = 8924, upload-time = "2026-03-24T00:35:32.26Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/73/47a9f7e8275bd3cf4c1f18a895a157de19d864cfad57e08452ef301f7834/acs_nativity-0.1.4-py3-none-any.whl", hash = "sha256:d1c9694266673f2920241608a24b4d36a5e402cdf6bb542097f56fb0ef5be604", size = 9188, upload-time = "2026-04-02T23:44:03.351Z" },
 ]
 
 [[package]]
@@ -35,7 +35,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "acs-nativity", specifier = ">=0.1.3" },
+    { name = "acs-nativity", specifier = ">=0.1.4" },
     { name = "streamlit", specifier = ">=1.55.0" },
 ]
 
@@ -2348,9 +2348,9 @@ wheels = [
 
 [[package]]
 name = "xyzservices"
-version = "2025.11.0"
+version = "2026.3.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ee/0f/022795fc1201e7c29e742a509913badb53ce0b38f64b6db859e2f6339da9/xyzservices-2025.11.0.tar.gz", hash = "sha256:2fc72b49502b25023fd71e8f532fb4beddbbf0aa124d90ea25dba44f545e17ce", size = 1135703, upload-time = "2025-11-22T11:31:51.82Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f6/08/3cb9f67a8d48021aca2a02292cc26eecd71d949ae70ad66420a8730cc302/xyzservices-2026.3.0.tar.gz", hash = "sha256:d226866a5d8e9fef337034d8da37a8298f0a1d9d1489b4018e69579eb321fea4", size = 1135736, upload-time = "2026-03-30T14:42:25.596Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ef/5c/2c189d18d495dd0fa3f27ccc60762bbc787eed95b9b0147266e72bb76585/xyzservices-2025.11.0-py3-none-any.whl", hash = "sha256:de66a7599a8d6dad63980b77defd1d8f5a5a9cb5fc8774ea1c6e89ca7c2a3d2f", size = 93916, upload-time = "2025-11-22T11:31:50.525Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/a9/d23012099dc88ec69a29c6407b41d89681cb674c2043cd5b467c7e299c08/xyzservices-2026.3.0-py3-none-any.whl", hash = "sha256:503183d4b322bfebc3c50cdd21192aa3e81e36c5efbf9133d54ae82143e0576b", size = 94101, upload-time = "2026-03-30T14:42:24.608Z" },
 ]
