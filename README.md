@@ -8,7 +8,7 @@ View the app **[here](https://acs-nativity.streamlit.app/)**.
 
 ## Adding New Data
 
-When new ACS 1‑year estimates are released (typically each July):
+When new ACS 1‑year estimates are released (typically each September):
 
 1. Update the constant `END_YEAR` in `scripts/gen_data.py`.
 2. From the project root, run:
