@@ -4,7 +4,7 @@ ACS data for 2025 is expected to be published in September 2026. Going forward, 
 
 This app was built by Ari Lamstein. If you have questions or feedback about it, you can reach me through my [website](https://arilamstein.com/).
 
-The app is built with Streamlit and powered by the `acs‑nativity` Python package.
+The app was built in Python using the `streamlit` framework and the `acs‑nativity` package.
 
 * [acs‑nativity on PyPI](https://pypi.org/project/acs-nativity/)  
 * [Source code for this app](https://github.com/arilamstein/acs-nativity-streamlit)
