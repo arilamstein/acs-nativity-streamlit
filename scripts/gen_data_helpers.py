@@ -45,7 +45,7 @@ def get_county_data(end_year: int = 2024, verbose: bool = True) -> pd.DataFrame:
     for state in states.ALL_STATES_AND_DC:
         if verbose:
             print(f"Getting data for {states.NAMES_FROM_IDS[state]}")
-        df_new = get_nativity_timeseries(state=state, county="*")
+        df_new = get_nativity_timeseries(end_year=end_year, state=state, county="*")
         dfs_county.append(df_new)
 
     df_county = pd.concat(dfs_county)
@@ -102,7 +102,7 @@ def get_place_data(end_year: int = 2024, verbose: bool = True) -> pd.DataFrame:
             continue
         if verbose:
             print(f"Getting data for {states.NAMES_FROM_IDS[state]}")
-        df_new = get_nativity_timeseries(state=state, place="*")
+        df_new = get_nativity_timeseries(end_year=end_year, state=state, place="*")
         dfs_place.append(df_new)
 
     df_place = pd.concat(dfs_place)
