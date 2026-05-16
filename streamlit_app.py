@@ -7,8 +7,7 @@ import ui as ui
 st.header("U.S. Foreign‑Born Population Trends")
 st.markdown(
     """
-    Explore how the foreign‑born and native‑born populations have changed 
-    across the United States.  
+    Explore how the US foreign-born and native-born populations have changed over time.
     """
 )
 
