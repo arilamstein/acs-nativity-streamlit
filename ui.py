@@ -12,6 +12,7 @@ the synchronization logic is handled centrally.
 """
 
 import streamlit as st
+
 import data_access as data
 
 VALID_TABS = ["bar", "line", "table", "compare"]

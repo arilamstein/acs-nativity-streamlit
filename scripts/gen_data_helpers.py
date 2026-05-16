@@ -1,6 +1,6 @@
+import pandas as pd
 from acs_nativity import get_nativity_timeseries
 from censusdis import states
-import pandas as pd
 
 
 def get_us_data(end_year: int = 2024, verbose: bool = True) -> pd.DataFrame:
@@ -40,7 +40,8 @@ def get_county_data(end_year: int = 2024, verbose: bool = True) -> pd.DataFrame:
     if verbose:
         print("Generating county data")
 
-    # API only lets you get all counties in a state, so we have to iterate over all states.
+    # API only lets you get all counties in a state,
+    # so we have to iterate over all states.
     dfs_county = []
     for state in states.ALL_STATES_AND_DC:
         if verbose:
@@ -73,7 +74,8 @@ def get_county_data(end_year: int = 2024, verbose: bool = True) -> pd.DataFrame:
     ]
 
     # Sort by year so new data will always appear at the end,
-    # which makes diffs easy to read. Sorting by state and county just makes it deterministic.
+    # which makes diffs easy to read. Sorting by state and county
+    # just makes it deterministic.
     df_county = df_county.sort_values(["Year", "State", "County"])
 
     if verbose:

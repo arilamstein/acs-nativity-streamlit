@@ -1,9 +1,10 @@
-import streamlit as st
 import acs_nativity
+import streamlit as st
+
 import data_access as data
 import ui as ui
 
-st.title("U.S. Foreign‑Born Population Trends")
+st.header("U.S. Foreign‑Born Population Trends")
 st.markdown(
     """
     Explore how the foreign‑born and native‑born populations have changed 
@@ -60,11 +61,12 @@ with compare_tab:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
     st.markdown(
-        f"Showing the change in **{column}** in **{state}** between **{year1}** and **{year2}**."
+        f"Showing the change in **{column}** in **{state}** "
+        f"between **{year1}** and **{year2}**."
     )
     st.dataframe(
         data.get_compare_df_styled(state, year1, year2, column), hide_index=True
     )
 
-with about_tab:
-    st.write(open("about.md").read())
+with about_tab, open("about.md") as f:
+    st.write(f.read())
