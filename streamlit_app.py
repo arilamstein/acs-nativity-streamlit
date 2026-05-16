@@ -1,14 +1,14 @@
-import streamlit as st
 import acs_nativity
+import streamlit as st
+
 import data_access as data
 import ui as ui
 
-st.set_page_config(layout="wide")
-st.title("U.S. Foreign‑Born Population Trends")
+st.header("U.S. Foreign‑Born Population Trends")
 st.markdown(
     """
     Explore how the foreign‑born and native‑born populations have changed 
-    across the United States since 2005.  
+    across the United States.  
     """
 )
 
@@ -18,12 +18,25 @@ line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
 with line_tab:
     location, column = ui.location_and_demographic_block("line")
     df = data.get_data_for_name(location)
-    st.plotly_chart(acs_nativity.plot_nativity_timeseries(df, column))
+    fig = acs_nativity.plot_nativity_timeseries(df, column)
+    fig.update_layout(dragmode=False)  # Disable zoom, as it causes problems on mobile
+    st.plotly_chart(fig)
+
+    # Show the same data as a table. Useful eg. if someone wants to download the data.
+    st.dataframe(
+        data.style_nativity_table(df[["Name", "Year", column]]), hide_index=True
+    )
 
 with bar_tab:
     location, column = ui.location_and_demographic_block("bar")
     df = data.get_data_for_name(location)
-    st.plotly_chart(acs_nativity.plot_nativity_change(df, column))
+    fig = acs_nativity.plot_nativity_change(df, column)
+    fig.update_layout(dragmode=False)  # Disable zoom, as it causes problems on mobile
+    st.plotly_chart(fig)
+    # Show the same data as a table. Useful eg. if someone wants to download the data.
+    st.dataframe(
+        data.style_nativity_table(df[["Name", "Year", column]]), hide_index=True
+    )
 
 with table_tab:
     col1, _ = st.columns([1, 2])
@@ -48,11 +61,12 @@ with compare_tab:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
     st.markdown(
-        f"Showing the change in **{column}** in **{state}** between **{year1}** and **{year2}**."
+        f"Showing the change in **{column}** in **{state}** "
+        f"between **{year1}** and **{year2}**."
     )
     st.dataframe(
         data.get_compare_df_styled(state, year1, year2, column), hide_index=True
     )
 
-with about_tab:
-    st.write(open("about.md").read())
+with about_tab, open("about.md") as f:
+    st.write(f.read())
