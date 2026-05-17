@@ -42,20 +42,22 @@ def update_keys(updated_key: str) -> None:
             st.session_state[key_to_update] = new_value
 
 
-def demographic_selector(tab: str) -> str:
-    validate_tab(tab)
-
-    options = [
+def get_demographic_options() -> list[str]:
+    return [
         "Foreign-born",
         "Percent Foreign-born",
         "Native",
         "Total",
     ]
 
+
+def demographic_selector(tab: str) -> str:
+    validate_tab(tab)
+
     key = gen_key(tab, "demographic_selector")
     column = st.selectbox(
         "Demographic:",
-        options=options,
+        options=get_demographic_options(),
         key=key,
         on_change=lambda: update_keys(key),
     )

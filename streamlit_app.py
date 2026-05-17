@@ -3,6 +3,7 @@ import streamlit as st
 
 import data_access as data
 import ui as ui
+import visualizations as viz
 
 st.header("U.S. Foreign‑Born Population Trends")
 st.markdown(
@@ -38,14 +39,22 @@ with bar_tab:
     )
 
 with table_tab:
-    col1, _ = st.columns([1, 2])
+    col1, col2, col3 = st.columns(3)
     with col1:
         state = ui.state_selector("table")
-    latest_only = st.checkbox("Latest year only", True)
+    with col2:
+        column = st.selectbox(
+            "Demographic:",
+            options=ui.get_demographic_options(),
+            index=ui.get_demographic_options().index("Percent Foreign-born"),
+        )
+    with col3:
+        latest_only = st.checkbox("Latest year only", True)
     year_text = "the **latest year**" if latest_only else "**all years**"
-    st.markdown(f"Showing all geographies for **{state}** for {year_text}.")
 
-    st.dataframe(data.get_table_df_styled(state, latest_only), hide_index=True)
+    # Chart followed by table
+    st.plotly_chart(viz.get_table_scatterplot(state, latest_only, column))
+    st.dataframe(data.get_table_df_styled(state, latest_only, column), hide_index=True)
 
 with compare_tab:
     years = data.get_years()

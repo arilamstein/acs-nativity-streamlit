@@ -39,7 +39,7 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_table_df(state: str, latest_only: bool) -> pd.DataFrame:
+def get_table_df(state: str, latest_only: bool, column: str) -> pd.DataFrame:
     df = df_all.copy()
 
     # Optionally subset to the latest year
@@ -52,13 +52,16 @@ def get_table_df(state: str, latest_only: bool) -> pd.DataFrame:
 
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
-    df = df.sort_values("Percent Foreign-born", ascending=False)
+
+    # Just keep the column the user selected, and then sort by it.
+    df = df[["Name", "Year", column]].reset_index(drop=True)
+    df = df.sort_values(column, ascending=False)
 
     return df
 
 
-def get_table_df_styled(state: str, latest_only: bool) -> Styler:
-    df = get_table_df(state, latest_only)
+def get_table_df_styled(state: str, latest_only: bool, column: str) -> Styler:
+    df = get_table_df(state, latest_only, column)
     return style_nativity_table(df)
 
 
@@ -72,7 +75,7 @@ def get_compare_df(state: str, year1: int, year2: int, column: str) -> pd.DataFr
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(state, False)
+    df = get_table_df(state, False, column)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 
