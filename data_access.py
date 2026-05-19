@@ -39,13 +39,11 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_table_df(state: str, latest_only: bool, column: str) -> pd.DataFrame:
+def get_table_df(state: str, year: int | None, column: str) -> pd.DataFrame:
     df = df_all.copy()
 
-    # Optionally subset to the latest year
-    if latest_only:
-        max_year = df["Year"].max()
-        df = df[df["Year"] == max_year]
+    if year is not None:
+        df = df[df["Year"] == year]
 
     if state != "All States":
         df = df[df["State"] == state]
@@ -60,8 +58,8 @@ def get_table_df(state: str, latest_only: bool, column: str) -> pd.DataFrame:
     return df
 
 
-def get_table_df_styled(state: str, latest_only: bool, column: str) -> Styler:
-    df = get_table_df(state, latest_only, column)
+def get_table_df_styled(state: str, year: int, column: str) -> Styler:
+    df = get_table_df(state, year, column)
     return style_nativity_table(df)
 
 
@@ -77,7 +75,7 @@ def get_compare_df(
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(state, False, column)
+    df = get_table_df(state, None, column)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 

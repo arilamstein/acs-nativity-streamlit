@@ -50,12 +50,12 @@ with ranking_tab:
             key="table_column_selector",
         )
     with col3:
-        latest_only = st.checkbox("Latest year only", True)
-    year_text = "the **latest year**" if latest_only else "**all years**"
+        years = data.get_years()
+        year = st.selectbox("Year:", data.get_years(), len(years) - 1)
 
     # Chart followed by table
-    st.plotly_chart(viz.get_table_scatterplot(state, latest_only, column))
-    st.dataframe(data.get_table_df_styled(state, latest_only, column), hide_index=True)
+    st.plotly_chart(viz.get_table_scatterplot(state, year, column))
+    st.dataframe(data.get_table_df_styled(state, year, column), hide_index=True)
 
 with compare_tab:
     years = data.get_years()
