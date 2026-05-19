@@ -47,6 +47,7 @@ with table_tab:
             "Demographic:",
             options=ui.get_demographic_options(),
             index=ui.get_demographic_options().index("Percent Foreign-born"),
+            key="table_column_selector",
         )
     with col3:
         latest_only = st.checkbox("Latest year only", True)
@@ -58,22 +59,40 @@ with table_tab:
 
 with compare_tab:
     years = data.get_years()
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4 = st.columns([30, 30, 20, 20])
     with col1:
         state = ui.state_selector("compare")
     with col2:
-        column = ui.demographic_selector("compare")
+        column = st.selectbox(
+            "Demographic:",
+            options=ui.get_demographic_options(),
+            index=ui.get_demographic_options().index("Percent Foreign-born"),
+            key="compare_column_selector",
+        )
     with col3:
         year1 = st.selectbox("First Year:", years, 0)
     with col4:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
-    st.markdown(
-        f"Showing the change in **{column}** in **{state}** "
-        f"between **{year1}** and **{year2}**."
+    if column != "Percent Foreign-born":
+        plot_column = st.radio(
+            "Unit:",
+            options=["Population", "Percent Change"],
+            index=0,
+            horizontal=True,
+        )
+        if plot_column == "Population":
+            plot_column = "Change"
+    else:
+        plot_column = "Change (pct points)"
+
+    # Chart followed by table
+    st.plotly_chart(
+        viz.get_compare_scatterplot(state, year1, year2, column, plot_column)
     )
     st.dataframe(
-        data.get_compare_df_styled(state, year1, year2, column), hide_index=True
+        data.get_compare_df_styled(state, year1, year2, column, plot_column),
+        hide_index=True,
     )
 
 with about_tab, open("about.md") as f:

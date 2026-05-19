@@ -69,7 +69,9 @@ def get_years() -> list[int]:
     return sorted(df_all["Year"].unique().tolist())
 
 
-def get_compare_df(state: str, year1: int, year2: int, column: str) -> pd.DataFrame:
+def get_compare_df(
+    state: str, year1: int, year2: int, column: str, sort_column: str
+) -> pd.DataFrame:
     """
     Return a wide DataFrame with Name, year1, year2, and change columns
     for the given location and column.
@@ -98,7 +100,7 @@ def get_compare_df(state: str, year1: int, year2: int, column: str) -> pd.DataFr
     else:
         # Otherwise add a "Percent Change" column and sort on it
         df_wide["Percent Change"] = df_wide["Change"] / df_wide[y1] * 100
-        df_wide = df_wide.sort_values("Percent Change", ascending=False)
+        df_wide = df_wide.sort_values(sort_column, ascending=False)
 
     return df_wide
 
@@ -125,6 +127,8 @@ def style_compare_table(
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_compare_df_styled(state: str, year1: int, year2: int, column: str) -> Styler:
-    df = get_compare_df(state, year1, year2, column)
+def get_compare_df_styled(
+    state: str, year1: int, year2: int, column: str, sort_column: str
+) -> Styler:
+    df = get_compare_df(state, year1, year2, column, sort_column)
     return style_compare_table(df, year1, year2, column)
