@@ -39,7 +39,7 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_table_df(state: str, latest_only: bool) -> pd.DataFrame:
+def get_table_df(state: str, latest_only: bool, column: str) -> pd.DataFrame:
     df = df_all.copy()
 
     # Optionally subset to the latest year
@@ -52,13 +52,16 @@ def get_table_df(state: str, latest_only: bool) -> pd.DataFrame:
 
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
-    df = df.sort_values("Percent Foreign-born", ascending=False)
+
+    # Just keep the column the user selected, and then sort by it.
+    df = df[["Name", "Year", column]].reset_index(drop=True)
+    df = df.sort_values(column, ascending=False)
 
     return df
 
 
-def get_table_df_styled(state: str, latest_only: bool) -> Styler:
-    df = get_table_df(state, latest_only)
+def get_table_df_styled(state: str, latest_only: bool, column: str) -> Styler:
+    df = get_table_df(state, latest_only, column)
     return style_nativity_table(df)
 
 
@@ -66,13 +69,15 @@ def get_years() -> list[int]:
     return sorted(df_all["Year"].unique().tolist())
 
 
-def get_compare_df(state: str, year1: int, year2: int, column: str) -> pd.DataFrame:
+def get_compare_df(
+    state: str, year1: int, year2: int, column: str, sort_column: str
+) -> pd.DataFrame:
     """
     Return a wide DataFrame with Name, year1, year2, and change columns
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(state, False)
+    df = get_table_df(state, False, column)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 
@@ -95,7 +100,7 @@ def get_compare_df(state: str, year1: int, year2: int, column: str) -> pd.DataFr
     else:
         # Otherwise add a "Percent Change" column and sort on it
         df_wide["Percent Change"] = df_wide["Change"] / df_wide[y1] * 100
-        df_wide = df_wide.sort_values("Percent Change", ascending=False)
+        df_wide = df_wide.sort_values(sort_column, ascending=False)
 
     return df_wide
 
@@ -122,6 +127,8 @@ def style_compare_table(
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_compare_df_styled(state: str, year1: int, year2: int, column: str) -> Styler:
-    df = get_compare_df(state, year1, year2, column)
+def get_compare_df_styled(
+    state: str, year1: int, year2: int, column: str, sort_column: str
+) -> Styler:
+    df = get_compare_df(state, year1, year2, column, sort_column)
     return style_compare_table(df, year1, year2, column)
