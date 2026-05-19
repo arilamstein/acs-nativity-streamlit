@@ -34,9 +34,11 @@ def _get_ranking_hovertext(column: str) -> str:
     )
 
 
-def get_table_scatterplot(state: str, year: int, column: str) -> go.Figure:
+def get_ranking_scatterplot(
+    year: int, column: str, name_to_highlight: str
+) -> go.Figure:
 
-    df = da.get_table_df(state, year, column)
+    df = da.get_table_df(year, column)
 
     fig = go.Figure()
 
@@ -55,6 +57,27 @@ def get_table_scatterplot(state: str, year: int, column: str) -> go.Figure:
             showlegend=False,
         )
     )
+
+    # Optionally highlight a point
+    if name_to_highlight:
+        hdf = df[df["Name"] == name_to_highlight]
+
+        fig.add_trace(
+            go.Scatter(
+                x=[0],
+                y=hdf[column],
+                mode="markers",
+                marker=dict(
+                    color="gold",
+                    size=14,
+                    symbol="star",
+                    line=dict(color="darkorange", width=1.5),
+                ),
+                name=name_to_highlight,
+                customdata=hdf[["Name", column]].values,
+                hovertemplate=_get_ranking_hovertext(column),
+            )
+        )
 
     # Title and footer
     fig.update_layout(
@@ -90,11 +113,11 @@ def _get_compare_hovertext(plot_column: str) -> str:
 
 
 def get_compare_scatterplot(
-    state: str, year1: int, year2: int, orig_column: str, plot_column: str
+    year1: int, year2: int, orig_column: str, plot_column: str, name_to_highlight: str
 ) -> go.Figure:
     fig = go.Figure()
 
-    df = da.get_compare_df(state, year1, year2, orig_column, plot_column).reset_index(
+    df = da.get_compare_df(year1, year2, orig_column, plot_column).reset_index(
         drop=True
     )
     if orig_column == "Percent Foreign-born":
@@ -115,6 +138,26 @@ def get_compare_scatterplot(
             showlegend=False,
         )
     )
+
+    # Optionally put a star to highlight a point
+    if name_to_highlight:
+        hdf = df[df["Name"] == name_to_highlight]
+        fig.add_trace(
+            go.Scatter(
+                x=[0],
+                y=hdf[plot_column],
+                mode="markers",
+                marker=dict(
+                    color="gold",
+                    size=14,
+                    symbol="star",
+                    line=dict(color="darkorange", width=1.5),
+                ),
+                name=name_to_highlight,
+                customdata=hdf[["Name", plot_column]].values,
+                hovertemplate=_get_compare_hovertext(plot_column),
+            )
+        )
 
     # Title and footer
     if orig_column == "Percent Foreign-born":
