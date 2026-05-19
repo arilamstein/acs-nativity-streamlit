@@ -15,7 +15,7 @@ import streamlit as st
 
 import data_access as data
 
-VALID_TABS = ["bar", "line", "table", "compare"]
+VALID_TABS = ["bar", "line", "ranking", "compare"]
 
 
 def validate_tab(tab: str) -> None:

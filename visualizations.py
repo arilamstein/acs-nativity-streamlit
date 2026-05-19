@@ -34,9 +34,9 @@ def _get_ranking_hovertext(column: str) -> str:
     )
 
 
-def get_table_scatterplot(state: str, latest_only: bool, column: str) -> go.Figure:
+def get_table_scatterplot(state: str, year: int, column: str) -> go.Figure:
 
-    df = da.get_table_df(state, latest_only, column)
+    df = da.get_table_df(state, year, column)
 
     fig = go.Figure()
 

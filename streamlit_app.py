@@ -12,8 +12,8 @@ st.markdown(
     """
 )
 
-line_tab, bar_tab, table_tab, compare_tab, about_tab = st.tabs(
-    ["📈 Trend", "📊 Year‑to‑Year Change", "📋 Table", "🔍 Compare Years", "ℹ️ About"]
+line_tab, bar_tab, ranking_tab, compare_tab, about_tab = st.tabs(
+    ["📈 Trend", "📊 Year‑to‑Year Change", "🏆 Ranking", "🔍 Compare Years", "ℹ️ About"]
 )
 with line_tab:
     location, column = ui.location_and_demographic_block("line")
@@ -38,10 +38,10 @@ with bar_tab:
         data.style_nativity_table(df[["Name", "Year", column]]), hide_index=True
     )
 
-with table_tab:
+with ranking_tab:
     col1, col2, col3 = st.columns(3)
     with col1:
-        state = ui.state_selector("table")
+        state = ui.state_selector("ranking")
     with col2:
         column = st.selectbox(
             "Demographic:",
@@ -50,12 +50,12 @@ with table_tab:
             key="table_column_selector",
         )
     with col3:
-        latest_only = st.checkbox("Latest year only", True)
-    year_text = "the **latest year**" if latest_only else "**all years**"
+        years = data.get_years()
+        year = st.selectbox("Year:", data.get_years(), len(years) - 1)
 
     # Chart followed by table
-    st.plotly_chart(viz.get_table_scatterplot(state, latest_only, column))
-    st.dataframe(data.get_table_df_styled(state, latest_only, column), hide_index=True)
+    st.plotly_chart(viz.get_table_scatterplot(state, year, column))
+    st.dataframe(data.get_table_df_styled(state, year, column), hide_index=True)
 
 with compare_tab:
     years = data.get_years()
