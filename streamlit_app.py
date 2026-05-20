@@ -26,6 +26,7 @@ with line_tab:
     st.dataframe(
         data.style_nativity_table(df[["Name", "Year", column]]), hide_index=True
     )
+    st.caption("Tip: click a column header to sort.")
 
 with bar_tab:
     location, column = ui.location_and_demographic_block("bar")
