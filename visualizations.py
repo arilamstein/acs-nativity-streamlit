@@ -44,7 +44,7 @@ def get_ranking_scatterplot(
     include_places: bool = True,
 ) -> go.Figure:
 
-    df = da.get_table_df(
+    df = da.get_ranking_df(
         year, column, include_nation, include_states, include_counties, include_places
     )
 

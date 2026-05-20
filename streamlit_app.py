@@ -118,7 +118,7 @@ with ranking_tab:
         st.plotly_chart(fig)
 
         st.dataframe(
-            data.get_table_df_styled(
+            data.get_ranking_df_styled(
                 year,
                 column,
                 include_nation,

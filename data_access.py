@@ -37,7 +37,7 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_data_by_geo(
+def _get_data_by_geo(
     include_nation: bool,
     include_states: bool,
     include_counties: bool,
@@ -60,7 +60,7 @@ def get_data_by_geo(
     return df.drop_duplicates(subset=["Name", "Year"]).reset_index(drop=True)
 
 
-def get_table_df(
+def get_ranking_df(
     year: int | None,
     column: str,
     include_nation: bool,
@@ -68,7 +68,7 @@ def get_table_df(
     include_counties: bool,
     include_places: bool,
 ) -> pd.DataFrame:
-    df = get_data_by_geo(
+    df = _get_data_by_geo(
         include_nation, include_states, include_counties, include_places
     )
 
@@ -85,7 +85,7 @@ def get_table_df(
     return df
 
 
-def get_table_df_styled(
+def get_ranking_df_styled(
     year: int,
     column: str,
     include_nation: bool,
@@ -93,7 +93,7 @@ def get_table_df_styled(
     include_counties: bool,
     include_places: bool,
 ) -> Styler:
-    df = get_table_df(
+    df = get_ranking_df(
         year, column, include_nation, include_states, include_counties, include_places
     )
     return style_nativity_table(df)
@@ -114,7 +114,7 @@ def get_compare_df(
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(None, column, True, True, True, True)
+    df = get_ranking_df(None, column, True, True, True, True)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 
