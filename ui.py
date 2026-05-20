@@ -96,18 +96,3 @@ def location_and_demographic_block(tab: str) -> tuple[str, str]:
         column = demographic_selector(tab)
 
     return location, column
-
-
-def state_selector(tab: str) -> str:
-    validate_tab(tab)
-
-    state_options = ["All States"] + data.get_all_states()
-    key = gen_key(tab, "state_selector")
-    state = st.selectbox(
-        "State:",
-        options=state_options,
-        key=key,
-        on_change=lambda: update_keys(key),
-    )
-
-    return state

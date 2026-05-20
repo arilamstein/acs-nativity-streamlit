@@ -39,14 +39,11 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_table_df(state: str, year: int | None, column: str) -> pd.DataFrame:
+def get_table_df(year: int | None, column: str) -> pd.DataFrame:
     df = df_all.copy()
 
     if year is not None:
         df = df[df["Year"] == year]
-
-    if state != "All States":
-        df = df[df["State"] == state]
 
     # Drop columns I added to support zoom
     df = df.drop(columns=["State", "County", "Place"], errors="ignore")
@@ -58,8 +55,8 @@ def get_table_df(state: str, year: int | None, column: str) -> pd.DataFrame:
     return df
 
 
-def get_table_df_styled(state: str, year: int, column: str) -> Styler:
-    df = get_table_df(state, year, column)
+def get_table_df_styled(year: int, column: str) -> Styler:
+    df = get_table_df(year, column)
     return style_nativity_table(df)
 
 
@@ -68,14 +65,14 @@ def get_years() -> list[int]:
 
 
 def get_compare_df(
-    state: str, year1: int, year2: int, column: str, sort_column: str
+    year1: int, year2: int, column: str, sort_column: str
 ) -> pd.DataFrame:
     """
     Return a wide DataFrame with Name, year1, year2, and change columns
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(state, None, column)
+    df = get_table_df(None, column)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 
@@ -126,7 +123,7 @@ def style_compare_table(
 
 
 def get_compare_df_styled(
-    state: str, year1: int, year2: int, column: str, sort_column: str
+    year1: int, year2: int, column: str, sort_column: str
 ) -> Styler:
-    df = get_compare_df(state, year1, year2, column, sort_column)
+    df = get_compare_df(year1, year2, column, sort_column)
     return style_compare_table(df, year1, year2, column)

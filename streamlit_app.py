@@ -39,9 +39,9 @@ with bar_tab:
     )
 
 with ranking_tab:
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([40, 40, 20])
     with col1:
-        state = ui.state_selector("ranking")
+        location = ui.location_selector("ranking")
     with col2:
         column = st.selectbox(
             "Demographic:",
@@ -54,14 +54,14 @@ with ranking_tab:
         year = st.selectbox("Year:", data.get_years(), len(years) - 1)
 
     # Chart followed by table
-    st.plotly_chart(viz.get_table_scatterplot(state, year, column))
-    st.dataframe(data.get_table_df_styled(state, year, column), hide_index=True)
+    st.plotly_chart(viz.get_ranking_scatterplot(year, column, location))
+    st.dataframe(data.get_table_df_styled(year, column), hide_index=True)
 
 with compare_tab:
     years = data.get_years()
-    col1, col2, col3, col4 = st.columns([30, 30, 20, 20])
+    col1, col2, col3, col4 = st.columns([35, 35, 15, 15])
     with col1:
-        state = ui.state_selector("compare")
+        location = ui.location_selector("compare")
     with col2:
         column = st.selectbox(
             "Demographic:",
@@ -88,10 +88,10 @@ with compare_tab:
 
     # Chart followed by table
     st.plotly_chart(
-        viz.get_compare_scatterplot(state, year1, year2, column, plot_column)
+        viz.get_compare_scatterplot(year1, year2, column, plot_column, location)
     )
     st.dataframe(
-        data.get_compare_df_styled(state, year1, year2, column, plot_column),
+        data.get_compare_df_styled(year1, year2, column, plot_column),
         hide_index=True,
     )
 
