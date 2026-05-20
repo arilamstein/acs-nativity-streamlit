@@ -12,8 +12,8 @@ st.markdown(
     """
 )
 
-line_tab, bar_tab, ranking_tab, compare_tab, about_tab = st.tabs(
-    ["📈 Trend", "📊 Year‑to‑Year Change", "🏆 Ranking", "🔍 Compare Years", "ℹ️ About"]
+line_tab, bar_tab, compare_tab, ranking_tab, about_tab = st.tabs(
+    ["📈 Trend", "📊 Annual Change", "🔍 Compare Years", "🏆 Ranking", "ℹ️ About"]
 )
 with line_tab:
     location, column = ui.location_and_demographic_block("line")
@@ -37,25 +37,6 @@ with bar_tab:
     st.dataframe(
         data.style_nativity_table(df[["Name", "Year", column]]), hide_index=True
     )
-
-with ranking_tab:
-    col1, col2, col3 = st.columns([40, 40, 20])
-    with col1:
-        location = ui.location_selector("ranking")
-    with col2:
-        column = st.selectbox(
-            "Demographic:",
-            options=ui.get_demographic_options(),
-            index=ui.get_demographic_options().index("Percent Foreign-born"),
-            key="table_column_selector",
-        )
-    with col3:
-        years = data.get_years()
-        year = st.selectbox("Year:", data.get_years(), len(years) - 1)
-
-    # Chart followed by table
-    st.plotly_chart(viz.get_ranking_scatterplot(year, column, location))
-    st.dataframe(data.get_table_df_styled(year, column), hide_index=True)
 
 with compare_tab:
     years = data.get_years()
@@ -94,6 +75,25 @@ with compare_tab:
         data.get_compare_df_styled(year1, year2, column, plot_column),
         hide_index=True,
     )
+
+with ranking_tab:
+    col1, col2, col3 = st.columns([40, 40, 20])
+    with col1:
+        location = ui.location_selector("ranking")
+    with col2:
+        column = st.selectbox(
+            "Demographic:",
+            options=ui.get_demographic_options(),
+            index=ui.get_demographic_options().index("Percent Foreign-born"),
+            key="table_column_selector",
+        )
+    with col3:
+        years = data.get_years()
+        year = st.selectbox("Year:", data.get_years(), len(years) - 1)
+
+    # Chart followed by table
+    st.plotly_chart(viz.get_ranking_scatterplot(year, column, location))
+    st.dataframe(data.get_table_df_styled(year, column), hide_index=True)
 
 with about_tab, open("about.md") as f:
     st.write(f.read())
