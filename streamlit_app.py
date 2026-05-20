@@ -92,9 +92,42 @@ with ranking_tab:
         years = data.get_years()
         year = st.selectbox("Year:", data.get_years(), len(years) - 1)
 
-    # Chart followed by table
-    st.plotly_chart(viz.get_ranking_scatterplot(year, column, location))
-    st.dataframe(data.get_table_df_styled(year, column), hide_index=True)
+    col_n, col_s, col_c, col_p = st.columns(4)
+    with col_n:
+        include_nation = st.checkbox("Nation", True)
+    with col_s:
+        include_states = st.checkbox("States", True)
+    with col_c:
+        include_counties = st.checkbox("Counties", True)
+    with col_p:
+        include_places = st.checkbox("Cities", True)
+
+    if sum([include_nation, include_states, include_counties, include_places]) == 0:
+        st.warning("Please select at least one geography.")
+    else:
+        # Chart followed by table
+        fig = viz.get_ranking_scatterplot(
+            year,
+            column,
+            location,
+            include_nation,
+            include_states,
+            include_counties,
+            include_places,
+        )
+        st.plotly_chart(fig)
+
+        st.dataframe(
+            data.get_table_df_styled(
+                year,
+                column,
+                include_nation,
+                include_states,
+                include_counties,
+                include_places,
+            ),
+            hide_index=True,
+        )
 
 with about_tab, open("about.md") as f:
     st.write(f.read())

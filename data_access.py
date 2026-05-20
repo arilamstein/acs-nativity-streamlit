@@ -4,14 +4,12 @@ import pandas as pd
 from pandas.io.formats.style import Styler
 
 DATA_DIR = Path("data")
-df_all = pd.concat(
-    [
-        pd.read_csv(DATA_DIR / "us.csv"),
-        pd.read_csv(DATA_DIR / "state.csv"),
-        pd.read_csv(DATA_DIR / "county.csv"),
-        pd.read_csv(DATA_DIR / "place.csv"),
-    ]
-)
+df_us = pd.read_csv(DATA_DIR / "us.csv")
+df_state = pd.read_csv(DATA_DIR / "state.csv")
+df_county = pd.read_csv(DATA_DIR / "county.csv")
+df_place = pd.read_csv(DATA_DIR / "place.csv")
+df_all = pd.concat([df_us, df_state, df_county, df_place])
+
 # Certain cities (especially "unincoporated cities" in Virginia) appear twice in the
 # underlying data - once in the county file and once in the place data.
 df_all = df_all.drop_duplicates(subset=["Name", "Year"]).reset_index(drop=True)
@@ -39,8 +37,40 @@ def style_nativity_table(df: pd.DataFrame) -> Styler:
     return df.style.format(fmt)  # type: ignore[arg-type]
 
 
-def get_table_df(year: int | None, column: str) -> pd.DataFrame:
-    df = df_all.copy()
+def get_data_by_geo(
+    include_nation: bool,
+    include_states: bool,
+    include_counties: bool,
+    include_places: bool,
+) -> pd.DataFrame:
+    frames = []
+    if include_nation:
+        frames.append(df_us)
+    if include_states:
+        frames.append(df_state)
+    if include_counties:
+        frames.append(df_county)
+    if include_places:
+        frames.append(df_place)
+
+    if not frames:
+        return pd.DataFrame()
+
+    df = pd.concat(frames)
+    return df.drop_duplicates(subset=["Name", "Year"]).reset_index(drop=True)
+
+
+def get_table_df(
+    year: int | None,
+    column: str,
+    include_nation: bool,
+    include_states: bool,
+    include_counties: bool,
+    include_places: bool,
+) -> pd.DataFrame:
+    df = get_data_by_geo(
+        include_nation, include_states, include_counties, include_places
+    )
 
     if year is not None:
         df = df[df["Year"] == year]
@@ -55,8 +85,17 @@ def get_table_df(year: int | None, column: str) -> pd.DataFrame:
     return df
 
 
-def get_table_df_styled(year: int, column: str) -> Styler:
-    df = get_table_df(year, column)
+def get_table_df_styled(
+    year: int,
+    column: str,
+    include_nation: bool,
+    include_states: bool,
+    include_counties: bool,
+    include_places: bool,
+) -> Styler:
+    df = get_table_df(
+        year, column, include_nation, include_states, include_counties, include_places
+    )
     return style_nativity_table(df)
 
 
@@ -65,14 +104,17 @@ def get_years() -> list[int]:
 
 
 def get_compare_df(
-    year1: int, year2: int, column: str, sort_column: str
+    year1: int,
+    year2: int,
+    column: str,
+    sort_column: str,
 ) -> pd.DataFrame:
     """
     Return a wide DataFrame with Name, year1, year2, and change columns
     for the given location and column.
     """
     # Pivot so we can easily compare years
-    df = get_table_df(None, column)
+    df = get_table_df(None, column, True, True, True, True)
     df_wide = df.pivot(index="Name", columns="Year", values=column).reset_index()
     df_wide.columns.name = None
 

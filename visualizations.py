@@ -35,10 +35,18 @@ def _get_ranking_hovertext(column: str) -> str:
 
 
 def get_ranking_scatterplot(
-    year: int, column: str, name_to_highlight: str
+    year: int,
+    column: str,
+    name_to_highlight: str,
+    include_nation: bool = True,
+    include_states: bool = True,
+    include_counties: bool = True,
+    include_places: bool = True,
 ) -> go.Figure:
 
-    df = da.get_table_df(year, column)
+    df = da.get_table_df(
+        year, column, include_nation, include_states, include_counties, include_places
+    )
 
     fig = go.Figure()
 
