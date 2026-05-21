@@ -56,17 +56,10 @@ with compare_tab:
     with col4:
         year2 = st.selectbox("Second Year:", years, len(years) - 1)
 
-    if column != "Percent Foreign-born":
-        plot_column = st.radio(
-            "Unit:",
-            options=["Population", "Percent Change"],
-            index=0,
-            horizontal=True,
-        )
-        if plot_column == "Population":
-            plot_column = "Change"
-    else:
+    if column == "Percent Foreign-born":
         plot_column = "Change (pct points)"
+    else:
+        plot_column = "Percent Change"
 
     # Chart followed by table
     st.plotly_chart(
