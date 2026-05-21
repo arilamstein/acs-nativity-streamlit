@@ -102,18 +102,18 @@ def get_ranking_scatterplot(
 
 
 def _get_compare_hovertext(plot_column: str) -> str:
-    if plot_column == "Change":
-        return (
-            "%{customdata[0]}<br>"  # Line 1: location
-            # Line 2: format with 1 decimal point and trailing %
-            f"{plot_column}: %{{customdata[1]:,.0f}}"
-            "<extra></extra>"  # Suppress trace name
-        )
-    elif plot_column == "Percent Change" or plot_column == "Change (pct points)":
+    if plot_column == "Percent Change":
         return (
             "%{customdata[0]}<br>"  # Line 1: location
             # Line 2: format with 1 decimal point and trailing %
             f"{plot_column}: %{{customdata[1]:,.1f}}%"
+            "<extra></extra>"  # Suppress trace name
+        )
+    elif plot_column == "Change (pct points)":
+        return (
+            "%{customdata[0]}<br>"  # Line 1: location
+            # Line 2: format with 1 decimal point
+            f"{plot_column}: %{{customdata[1]:,.1f}}"
             "<extra></extra>"  # Suppress trace name
         )
     else:
@@ -173,7 +173,7 @@ def get_compare_scatterplot(
         y_title = "Percentage Points"
     else:
         title = f"{plot_column} in {orig_column}, {year1}–{year2}"
-        y_title = "Population" if plot_column == "Change" else plot_column
+        y_title = plot_column
     fig.update_layout(
         title=(
             f"{title}<br><sup>Each point represents a location. Hover to explore.</sup>"
