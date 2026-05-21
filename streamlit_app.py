@@ -61,14 +61,17 @@ with compare_tab:
     else:
         plot_column = "Percent Change"
 
-    # Chart followed by table
-    st.plotly_chart(
-        viz.get_compare_scatterplot(year1, year2, column, plot_column, location)
-    )
-    st.dataframe(
-        data.get_compare_df_styled(year1, year2, column, plot_column),
-        hide_index=True,
-    )
+    if year1 == year2:
+        st.warning("Please select two different years.")
+    else:
+        # Chart followed by table
+        st.plotly_chart(
+            viz.get_compare_scatterplot(year1, year2, column, plot_column, location)
+        )
+        st.dataframe(
+            data.get_compare_df_styled(year1, year2, column, plot_column),
+            hide_index=True,
+        )
 
 with ranking_tab:
     col1, col2, col3 = st.columns([40, 40, 20])
